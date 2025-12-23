@@ -1,173 +1,132 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mural de Tabelas do TabeLaLa</title>
-<style>
-/* RESET E BASE */
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
-body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #fcfcfc;
-        color: #333;
-        line-height: 1.6;
-        padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mural TabeLaLa</title>
+    <style>
+        /* Reset básico */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #fdf2f8; /* Fundo rosinha claro */
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+        }
 
-    header {
-        text-align: center;
-        padding: 40px 0;
-    }
+        /* Título Centralizado Fixo */
+        .titulo-central {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            text-align: center;
+            width: 100%;
+            pointer-events: none; /* Deixa clicar nas fotos por trás */
+        }
 
-    h1 {
-        font-size: 2.5rem;
-        font-weight: 300;
-        color: #222;
-        letter-spacing: -1px;
-    }
+        .titulo-central h1 {
+            background: rgba(255, 255, 255, 0.7); /* Efeito vidro */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #be185d;
+            display: inline-block;
+            padding: 20px 60px;
+            border-radius: 100px;
+            font-size: 4rem;
+            margin: 0;
+            border: 4px solid #f472b6;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 900;
+        }
 
-    /* LAYOUT DO MURAL (MASONRY PURO CSS) */
-    .mural-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        /* Cria o efeito de colunas variadas sem JS */
-        column-count: 4;
-        column-gap: 15px;
-    }
+        /* Container do Mosaico (Estilo Pinterest) */
+        .mosaico-container {
+            padding: 20px;
+            column-count: 4; /* Número de colunas no PC */
+            column-gap: 15px;
+            filter: saturate(0.9); /* Deixa o fundo levemente mais suave */
+        }
 
-    .mural-item {
-        display: inline-block;
-        width: 100%;
-        margin-bottom: 15px;
-        background-color: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease;
-    }
+        .mosaico-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
 
-    .mural-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
+        /* Efeito ao passar o mouse nas tabelas */
+        .mosaico-container img:hover {
+            transform: scale(1.03);
+            filter: saturate(1.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
 
-    .mural-item img {
-        width: 100%;
-        display: block;
-        height: auto;
-        object-fit: cover;
-    }
+        /* Responsividade (Ajuste de colunas para telas menores) */
+        @media (max-width: 1200px) {
+            .mosaico-container { column-count: 3; }
+            .titulo-central h1 { font-size: 3rem; }
+        }
 
-    /* RESPONSIVIDADE */
-    @media (max-width: 1024px) {
-        .mural-container { column-count: 3; }
-    }
+        @media (max-width: 800px) {
+            .mosaico-container { column-count: 2; }
+            .titulo-central h1 { font-size: 2rem; padding: 15px 30px; }
+        }
 
-    @media (max-width: 768px) {
-        .mural-container { column-count: 2; }
-        h1 { font-size: 1.8rem; }
-    }
-
-    @media (max-width: 480px) {
-        .mural-container { column-count: 1; }
-    }
-
-    /* ESTADO DE CARREGAMENTO */
-    #status {
-        text-align: center;
-        padding: 20px;
-        font-style: italic;
-        color: #888;
-    }
-</style>
+        @media (max-width: 500px) {
+            .mosaico-container { column-count: 1; }
+            .titulo-central h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
-<header>
-    <h1>Mural de Tabelas do TabeLaLa</h1>
-</header>
 
-<div id="status">Carregando tabelas...</div>
+    <!-- Título que fica parado no centro -->
+    <div class="titulo-central">
+        <h1>Mural TabeLaLa</h1>
+    </div>
 
-<main class="mural-container" id="mural">
-    <!-- As imagens entrarão aqui via JavaScript -->
-</main>
+    <!-- Mosaico com as 27 imagens -->
+    <div class="mosaico-container">
+        <img src="tabela1.jpg">
+        <img src="tabela2.jpg">
+        <img src="tabela3.jpg">
+        <img src="tabela4.jpg">
+        <img src="tabela5.jpg">
+        <img src="tabela6.jpg">
+        <img src="tabela7.jpg">
+        <img src="tabela8.jpg">
+        <img src="tabela9.jpg">
+        <img src="tabela10.jpg">
+        <img src="tabela11.jpg">
+        <img src="tabela12.jpg">
+        <img src="tabela13.jpg">
+        <img src="tabela14.jpg">
+        <img src="tabela15.jpg">
+        <img src="tabela16.jpg">
+        <img src="tabela17.jpg">
+        <img src="tabela18.jpg">
+        <img src="tabela19.jpg">
+        <img src="tabela20.jpg">
+        <img src="tabela21.jpg">
+        <img src="tabela22.jpg">
+        <img src="tabela23.jpg">
+        <img src="tabela24.jpg">
+        <img src="tabela25.jpg">
+        <img src="tabela26.jpg">
+        <img src="tabela27.jpg">
+    </div>
 
-<script>
-    /**
-     * EXPLICAÇÃO TÉCNICA OBRIGATÓRIA:
-     * No ambiente de navegadores modernos e servidores estáticos (como GitHub Pages), 
-     * o JavaScript não consegue "ler pastas" localmente por questões de segurança.
-     * 
-     * A ÚNICA forma de carregar arquivos automaticamente sem editar o código toda vez 
-     * e sem ter um backend (PHP/Node) é consultando a API pública do GitHub.
-     * 
-     * Abaixo, configure o seu usuário e o nome do seu repositório.
-     */
-
-    const CONFIG = {
-        usuarioGitHub: 'SEU_USUARIO_AQUI', // Troque pelo seu nome de usuário do GitHub
-        repositorio: 'NOME_DO_REPOSITORIO', // Troque pelo nome do repositório
-        pastaImagens: 'imagens' // Nome da pasta onde estarão os .jpg
-    };
-
-    async function carregarMural() {
-        const mural = document.getElementById('mural');
-        const status = document.getElementById('status');
-
-        // URL da API do GitHub para listar arquivos da pasta
-        const urlApi = `https://api.github.com/repos/${CONFIG.usuarioGitHub}/${CONFIG.repositorio}/contents/${CONFIG.pastaImagens}`;
-
-        try {
-            const response = await fetch(urlApi);
-            
-            if (!response.ok) {
-                throw new Error('Não foi possível acessar a pasta de imagens. Verifique as configurações no código.');
-            }
-
-            const arquivos = await response.json();
-
-            // Filtrar apenas arquivos que terminam em .jpg ou .jpeg
-            const imagens = arquivos.filter(arquivo => 
-                arquivo.name.toLowerCase().endsWith('.jpg') || 
-                arquivo.name.toLowerCase().endsWith('.jpeg')
-            );
-
-            if (imagens.length === 0) {
-                status.innerText = "Nenhuma imagem encontrada na pasta /imagens/.";
-                return;
-            }
-
-            // Limpa o status de carregamento
-            status.style.display = 'none';
-
-            // Renderiza cada imagem no mural
-            imagens.forEach(imgData => {
-                const div = document.createElement('div');
-                div.className = 'mural-item';
-
-                const img = document.createElement('img');
-                // Usamos download_url que é o link direto da imagem no GitHub
-                img.src = imgData.download_url;
-                img.alt = "Tabela do TabeLaLa";
-                img.loading = "lazy"; // Melhora performance
-
-                div.appendChild(img);
-                mural.appendChild(div);
-            });
-
-        } catch (erro) {
-            console.error(erro);
-            status.innerHTML = `Erro ao carregar imagens.<br><small>${erro.message}</small><br><br><b>Verifique se você configurou seu USUÁRIO e REPOSITÓRIO corretamente no script deste arquivo HTML.</b>`;
-        }
-    }
-
-    // Inicia a busca automática ao carregar a página
-    window.onload = carregarMural;
-</script>
 </body>
 </html>
+</body>
+</html>
+

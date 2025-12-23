@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mural de Tabelas do TabeLaLa</title>
+<style>
+/* RESET E BASE */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #fcfcfc;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+
+    header {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #222;
+        letter-spacing: -1px;
+    }
+
+    /* LAYOUT DO MURAL (MASONRY PURO CSS) */
+    .mural-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        /* Cria o efeito de colunas variadas sem JS */
+        column-count: 4;
+        column-gap: 15px;
+    }
+
+    .mural-item {
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .mural-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .mural-item img {
+        width: 100%;
+        display: block;
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 1024px) {
+        .mural-container { column-count: 3; }
+    }
+
+    @media (max-width: 768px) {
+        .mural-container { column-count: 2; }
+        h1 { font-size: 1.8rem; }
+    }
+
+    @media (max-width: 480px) {
+        .mural-container { column-count: 1; }
+    }
+
+    /* ESTADO DE CARREGAMENTO */
+    #status {
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+        color: #888;
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>Mural de Tabelas do TabeLaLa</h1>
+</header>
+
+<div id="status">Carregando tabelas...</div>
+
+<main class="mural-container" id="mural">
+    <!-- As imagens entrarão aqui via JavaScript -->
+</main>
+
+<script>
+    /**
+     * EXPLICAÇÃO TÉCNICA OBRIGATÓRIA:
+     * No ambiente de navegadores modernos e servidores estáticos (como GitHub Pages), 
+     * o JavaScript não consegue "ler pastas" localmente por questões de segurança.
+     * 
+     * A ÚNICA forma de carregar arquivos automaticamente sem editar o código toda vez 
+     * e sem ter um backend (PHP/Node) é consultando a API pública do GitHub.
+     * 
+     * Abaixo, configure o seu usuário e o nome do seu repositório.
+     */
+
+    const CONFIG = {
+        usuarioGitHub: 'SEU_USUARIO_AQUI', // Troque pelo seu nome de usuário do GitHub
+        repositorio: 'NOME_DO_REPOSITORIO', // Troque pelo nome do repositório
+        pastaImagens: 'imagens' // Nome da pasta onde estarão os .jpg
+    };
+
+    async function carregarMural() {
+        const mural = document.getElementById('mural');
+        const status = document.getElementById('status');
+
+        // URL da API do GitHub para listar arquivos da pasta
+        const urlApi = `https://api.github.com/repos/${CONFIG.usuarioGitHub}/${CONFIG.repositorio}/contents/${CONFIG.pastaImagens}`;
+
+        try {
+            const response = await fetch(urlApi);
+            
+            if (!response.ok) {
+                throw new Error('Não foi possível acessar a pasta de imagens. Verifique as configurações no código.');
+            }
+
+            const arquivos = await response.json();
+
+            // Filtrar apenas arquivos que terminam em .jpg ou .jpeg
+            const imagens = arquivos.filter(arquivo => 
+                arquivo.name.toLowerCase().endsWith('.jpg') || 
+                arquivo.name.toLowerCase().endsWith('.jpeg')
+            );
+
+            if (imagens.length === 0) {
+                status.innerText = "Nenhuma imagem encontrada na pasta /imagens/.";
+                return;
+            }
+
+            // Limpa o status de carregamento
+            status.style.display = 'none';
+
+            // Renderiza cada imagem no mural
+            imagens.forEach(imgData => {
+                const div = document.createElement('div');
+                div.className = 'mural-item';
+
+                const img = document.createElement('img');
+                // Usamos download_url que é o link direto da imagem no GitHub
+                img.src = imgData.download_url;
+                img.alt = "Tabela do TabeLaLa";
+                img.loading = "lazy"; // Melhora performance
+
+                div.appendChild(img);
+                mural.appendChild(div);
+            });
+
+        } catch (erro) {
+            console.error(erro);
+            status.innerHTML = `Erro ao carregar imagens.<br><small>${erro.message}</small><br><br><b>Verifique se você configurou seu USUÁRIO e REPOSITÓRIO corretamente no script deste arquivo HTML.</b>`;
+        }
+    }
+
+    // Inicia a busca automática ao carregar a página
+    window.onload = carregarMural;
+</script>
+</body>
+</html>

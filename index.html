@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mural TabeLaLa</title>
-    <!-- Fontes: Pacifico para o título e Montserrat para o subtítulo -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <!-- Fontes Premium: Playfair Display (Título) e Montserrat (Subtítulo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a; /* Fundo preto profundo para o luxo */
-            --overlay-opacity: 0.45; /* Transparência da camada preta */
+            --bg-color: #050505; /* Preto quase absoluto */
+            --overlay-opacity: 0.35; /* Transparência ideal para ver as tabelas */
+            --text-color: #ffffff;
         }
 
         * {
@@ -24,134 +25,143 @@
             overflow-x: hidden;
         }
 
-        /* CAMADA PRETA OPACA SOBRE TODO O SITE */
-        .site-overlay {
+        /* CAMADA ESCURA SOBRE O SITE TODO */
+        .dark-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, var(--overlay-opacity));
-            z-index: 50;
-            pointer-events: none; /* Permite que você clique/role as fotos por baixo */
+            z-index: 10;
+            pointer-events: none; /* Deixa rolar a página por baixo */
         }
 
-        /* TÍTULOS CENTRALIZADOS FIXOS */
-        .hero-section {
+        /* TEXTOS FIXOS NO CENTRO */
+        .hero-center {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 100;
             text-align: center;
-            width: 100%;
+            width: 90%;
             pointer-events: none;
         }
 
-        .hero-section h1 {
-            font-family: 'Pacifico', cursive;
-            color: #ffffff;
+        .hero-center h1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
             font-size: 8vw;
-            line-height: 1.2;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: var(--text-color);
+            letter-spacing: -2px;
+            line-height: 1;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            margin-bottom: 10px;
         }
 
-        .hero-section p {
+        .hero-center p {
             font-family: 'Montserrat', sans-serif;
-            color: #ffffff;
-            font-size: 1.5vw;
+            color: var(--text-color);
+            font-size: 1.2vw;
             font-weight: 300;
-            letter-spacing: 6px;
             text-transform: uppercase;
-            margin-top: 10px;
-            opacity: 0.9;
+            letter-spacing: 8px; /* Elegância nos espaços */
+            opacity: 0.8;
         }
 
-        /* EFEITO ESFUMAÇADO (NÉVOA) NO FINAL DA PÁGINA */
-        .bottom-fog {
+        /* EFEITO ESFUMAÇADO NO FINAL (BOTTOM FOG) */
+        .bottom-gradient {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 35vh; /* Altura da fumaça */
-            background: linear-gradient(to top, var(--bg-color) 10%, transparent 100%);
-            z-index: 60;
+            height: 40vh; /* Altura do esfumaçado */
+            background: linear-gradient(to top, var(--bg-color) 0%, transparent 100%);
+            z-index: 20;
             pointer-events: none;
         }
 
-        /* CONTAINER DAS IMAGENS (ESTILO MASONRY SEM CORTES) */
-        .mural-container {
-            padding: 10px;
+        /* CONTAINER MASONRY (SEM CORTES NAS TABELAS) */
+        .masonry-mural {
+            padding: 5px;
             column-count: 4; /* Colunas no PC */
-            column-gap: 8px; /* Borda mínima entre imagens */
+            column-gap: 5px; /* Bordas mínimas entre imagens */
             width: 100%;
-            position: relative;
         }
 
-        .mural-item {
+        .masonry-item {
             display: inline-block;
             width: 100%;
-            margin-bottom: 8px; /* Espaço mínimo vertical */
+            margin-bottom: 5px;
             break-inside: avoid;
-        }
-
-        .mural-item img {
-            width: 100%;
-            height: auto; /* Garante que a imagem não seja cortada */
-            display: block;
-            border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform 0.4s ease;
         }
 
-        .mural-item:hover img {
+        .masonry-item img {
+            width: 100%;
+            height: auto; /* IMPORTANTE: Mantém a imagem inteira sem cortes */
+            display: block;
+            border-radius: 2px;
+            filter: grayscale(20%); /* Leve toque sóbrio */
+            transition: all 0.4s ease;
+        }
+
+        .masonry-item:hover {
             transform: scale(1.02);
-            filter: brightness(1.2);
+            z-index: 30;
         }
 
-        /* RESPONSIVIDADE PARA CELULAR */
-        @media (max-width: 1000px) {
-            .mural-container { column-count: 3; }
-            .hero-section h1 { font-size: 12vw; }
-            .hero-section p { font-size: 3vw; letter-spacing: 3px; }
+        .masonry-item:hover img {
+            filter: grayscale(0%) brightness(1.1);
         }
 
-        @media (max-width: 600px) {
-            .mural-container { column-count: 2; }
-            .hero-section h1 { font-size: 16vw; }
-            .hero-section p { font-size: 4vw; }
-            .bottom-fog { height: 25vh; }
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .masonry-mural { column-count: 3; }
+            .hero-center h1 { font-size: 10vw; }
+            .hero-center p { font-size: 2vw; }
+        }
+
+        @media (max-width: 800px) {
+            .masonry-mural { column-count: 2; }
+            .hero-center h1 { font-size: 14vw; }
+            .hero-center p { font-size: 3vw; letter-spacing: 4px; }
+            .bottom-gradient { height: 25vh; }
+        }
+
+        @media (max-width: 500px) {
+            .masonry-mural { column-count: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay escuro fixo -->
-    <div class="site-overlay"></div>
+    <!-- Camada de escurecimento suave -->
+    <div class="dark-overlay"></div>
 
-    <!-- Títulos fixos -->
-    <div class="hero-section">
+    <!-- Títulos elegantes no centro -->
+    <div class="hero-center">
         <h1>Mural TabeLaLa</h1>
         <p>Tabelas e depoimentos de usuários</p>
     </div>
 
-    <!-- Mosaico de imagens por baixo -->
-    <div class="mural-container" id="gallery"></div>
+    <!-- Mosaico Masonry (Imagens inteiras) -->
+    <div class="masonry-mural" id="gallery"></div>
 
-    <!-- Efeito de névoa no fundo -->
-    <div class="bottom-fog"></div>
+    <!-- Efeito de fumaça desaparecendo no fim -->
+    <div class="bottom-gradient"></div>
 
     <script>
         const gallery = document.getElementById('gallery');
         
-        // Loop para carregar as 27 imagens com os seus nomes do GitHub
         for (let i = 1; i <= 27; i++) {
-            const div = document.createElement('div');
-            div.className = 'mural-item';
+            const item = document.createElement('div');
+            item.className = 'masonry-item';
             
             const img = document.createElement('img');
             
-            // Lógica para lidar com as extensões .jpg.png e .jpg.jfif do seu print
+            // Mantendo o suporte para as extensões do seu print do GitHub
             img.src = `tabela${i}.jpg.png`; 
             
             img.onerror = function() {
@@ -162,12 +172,13 @@
                 }
             };
             
-            div.appendChild(img);
-            gallery.appendChild(div);
+            item.appendChild(img);
+            gallery.appendChild(item);
         }
     </script>
 </body>
 </html>
+
 
 
 

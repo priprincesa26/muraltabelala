@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mural TabeLaLa</title>
-    <!-- Fonte parecida com a da sua imagem -->
+    <!-- Fonte manuscrita para o título -->
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,12 +14,12 @@
         }
 
         body {
-            background-color: #000;
+            background-color: #fce4ec;
             overflow-x: hidden;
-            font-family: 'Pacifico', cursive;
+            font-family: sans-serif;
         }
 
-        /* Título centralizado e fixo */
+        /* TÍTULO CENTRALIZADO IGUAL À IMAGEM */
         .titulo-container {
             position: fixed;
             top: 50%;
@@ -28,24 +28,31 @@
             z-index: 100;
             width: 100%;
             text-align: center;
-            pointer-events: none; /* Permite clicar nas fotos atrás do texto */
+            pointer-events: none;
         }
 
         .titulo-container h1 {
-            color: #ff99cc; /* Cor rosa da imagem */
+            font-family: 'Pacifico', cursive;
+            color: #ff85b3; /* Rosa do texto */
             font-size: 8vw;
-            text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.8), 
-                         -2px -2px 0px rgba(0,0,0,0.2);
-            white-space: nowrap;
+            /* Efeito de borda branca e sombra suave */
+            text-shadow: 
+                -3px -3px 0 #fff,  
+                 3px -3px 0 #fff,
+                -3px  3px 0 #fff,
+                 3px  3px 0 #fff,
+                 4px  4px 15px rgba(0,0,0,0.1);
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
         }
 
-        /* Container do Mosaico */
+        /* MOSAICO DE IMAGENS */
         .mural {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            grid-auto-rows: 120px;
-            grid-auto-flow: dense; /* O segredo para encaixar e não deixar buracos */
-            gap: 0; /* Sem espaço entre elas como na sua imagem, ou mude para 5px se quiser espacinho */
+            /* Cria colunas pequenas para permitir encaixes variados */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-auto-rows: 150px;
+            grid-auto-flow: dense; /* Organiza as fotos para não deixar buracos */
+            gap: 0;
             width: 100vw;
             min-height: 100vh;
         }
@@ -53,26 +60,21 @@
         .mural img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Faz a foto preencher o retângulo sem distorcer */
+            object-fit: cover; /* Faz a tabela preencher o espaço sem deformar */
+            display: block;
+            border: 0.1px solid rgba(255,255,255,0.2); /* Linha finíssima entre elas */
             transition: transform 0.3s;
         }
 
-        .mural img:hover {
-            filter: brightness(1.2);
-            z-index: 10;
-            transform: scale(1.05);
-        }
+        /* TAMANHOS VARIADOS (ALEATÓRIOS) */
+        .span-v { grid-row: span 2; } /* Vertical (Alta) */
+        .span-h { grid-column: span 2; } /* Horizontal (Larga) */
+        .span-big { grid-column: span 2; grid-row: span 2; } /* Grande */
 
-        /* Classes de tamanhos variados para o efeito mosaico */
-        .item-pequeno { grid-column: span 1; grid-row: span 1; }
-        .item-largo { grid-column: span 2; grid-row: span 1; }
-        .item-alto { grid-column: span 1; grid-row: span 2; }
-        .item-grande { grid-column: span 2; grid-row: span 2; }
-
-        /* Ajuste para celular */
+        /* Ajustes Mobile */
         @media (max-width: 600px) {
-            .mural { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); grid-auto-rows: 80px; }
-            .titulo-container h1 { font-size: 15vw; }
+            .mural { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-rows: 100px; }
+            .titulo-container h1 { font-size: 16vw; }
         }
     </style>
 </head>
@@ -83,35 +85,30 @@
     </div>
 
     <div class="mural" id="mural">
-        <!-- O JavaScript abaixo vai gerar as 27 imagens com tamanhos aleatórios -->
+        <!-- O script abaixo vai colocar as 27 fotos aqui dentro -->
     </div>
 
     <script>
         const mural = document.getElementById('mural');
-        const tamanhos = ['item-pequeno', 'item-largo', 'item-alto', 'item-grande'];
         
-        // Loop para criar as 27 imagens
+        // Estilos de tamanhos para criar o efeito mosaico "aleatório"
+        const estilos = ['', 'span-v', 'span-h', 'span-big', '', 'span-h'];
+
         for (let i = 1; i <= 27; i++) {
             const img = document.createElement('img');
-            img.src = `tabela${i}.jpg`; // Nome das suas fotos
             
-            // Escolhe um tamanho aleatório da lista acima
-            const tamanhoAleatorio = tamanhos[Math.floor(Math.random() * tamanhos.length)];
-            img.classList.add(tamanhoAleatorio);
+            // ATENÇÃO: Verifique se o nome é tabela1.jpg (minúsculo)
+            img.src = `tabela${i}.jpg`; 
             
-            // Caso a imagem falhe (nome errado), mostra um bloco colorido
-            img.onerror = function() {
-                this.style.display = 'none';
-                const div = document.createElement('div');
-                div.className = tamanhoAleatorio;
-                div.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-                mural.appendChild(div);
-            };
-
+            // Sorteia um tamanho para essa imagem
+            const estiloAleatorio = estilos[Math.floor(Math.random() * estilos.length)];
+            if (estiloAleatorio) img.classList.add(estiloAleatorio);
+            
             mural.appendChild(img);
         }
     </script>
 </body>
 </html>
+
 
 

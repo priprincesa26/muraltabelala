@@ -34,7 +34,7 @@
             height: 100%;
             background: rgba(0, 0, 0, var(--overlay-opacity));
             z-index: 10;
-            pointer-events: none; /* Deixa rolar a página por baixo */
+            pointer-events: none;
         }
 
         /* TEXTOS FIXOS NO CENTRO */
@@ -66,28 +66,30 @@
             font-size: 1.2vw;
             font-weight: 300;
             text-transform: uppercase;
-            letter-spacing: 8px; /* Elegância nos espaços */
+            letter-spacing: 8px;
             opacity: 0.8;
         }
 
-        /* EFEITO ESFUMAÇADO NO FINAL (BOTTOM FOG) */
+        /* EFEITO ESFUMAÇADO NO FINAL */
         .bottom-gradient {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 40vh; /* Altura do esfumaçado */
+            height: 40vh;
             background: linear-gradient(to top, var(--bg-color) 0%, transparent 100%);
             z-index: 20;
             pointer-events: none;
         }
 
-        /* CONTAINER MASONRY (SEM CORTES NAS TABELAS) */
+        /* CONTAINER MASONRY */
         .masonry-mural {
             padding: 5px;
-            column-count: 4; /* Colunas no PC */
-            column-gap: 5px; /* Bordas mínimas entre imagens */
+            column-count: 4;
+            column-gap: 5px;
             width: 100%;
+            position: relative;
+            z-index: 5;
         }
 
         .masonry-item {
@@ -100,11 +102,12 @@
 
         .masonry-item img {
             width: 100%;
-            height: auto; /* IMPORTANTE: Mantém a imagem inteira sem cortes */
+            height: auto;
             display: block;
             border-radius: 2px;
-            filter: grayscale(20%); /* Leve toque sóbrio */
+            filter: grayscale(20%);
             transition: all 0.4s ease;
+            background-color: #111; /* Cor de fundo enquanto carrega */
         }
 
         .masonry-item:hover {
@@ -137,47 +140,76 @@
 </head>
 <body>
 
-    <!-- Camada de escurecimento suave -->
     <div class="dark-overlay"></div>
 
-    <!-- Títulos elegantes no centro -->
     <div class="hero-center">
         <h1>Mural TabeLaLa</h1>
         <p>Tabelas e depoimentos de usuários</p>
     </div>
 
-    <!-- Mosaico Masonry (Imagens inteiras) -->
-    <div class="masonry-mural" id="gallery"></div>
+    <div class="masonry-mural" id="gallery">
+        <!-- As imagens entrarão aqui automaticamente via JS -->
+    </div>
 
-    <!-- Efeito de fumaça desaparecendo no fim -->
     <div class="bottom-gradient"></div>
 
     <script>
+        // --- CONFIGURAÇÃO DO SEU GITHUB ---
+        const GITHUB_USER = "SEU_USUARIO_AQUI";      // Nome do seu perfil no GitHub
+        const GITHUB_REPO = "SEU_REPOSITORIO_AQUI"; // Nome do repositório (projeto)
+        const GITHUB_PATH = "";                     // Nome da pasta onde estão as fotos (deixe vazio se estiverem na raiz)
+
         const gallery = document.getElementById('gallery');
-        
-        for (let i = 1; i <= 27; i++) {
-            const item = document.createElement('div');
-            item.className = 'masonry-item';
-            
-            const img = document.createElement('img');
-            
-            // Mantendo o suporte para as extensões do seu print do GitHub
-            img.src = `tabela${i}.jpg.png`; 
-            
-            img.onerror = function() {
-                if (this.src.includes('.png')) {
-                    this.src = `tabela${i}.jpg.jfif`;
-                } else if (this.src.includes('.jfif')) {
-                    this.src = `tabela${i}.jpg`;
+
+        async function fetchImages() {
+            try {
+                // URL da API do GitHub para listar arquivos
+                const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+                
+                const response = await fetch(url);
+                const files = await response.json();
+
+                if (!Array.isArray(files)) {
+                    console.error("Erro: Não foi possível listar os arquivos. Verifique as configurações.");
+                    return;
                 }
-            };
-            
-            item.appendChild(img);
-            gallery.appendChild(item);
+
+                // Extensões que o código vai aceitar
+                const validExtensions = ['.png', '.jpg', '.jpeg', '.jfif', '.webp', '.gif'];
+
+                // Filtra apenas as imagens e remove arquivos como index.html ou README
+                const images = files.filter(file => {
+                    const fileName = file.name.toLowerCase();
+                    return validExtensions.some(ext => fileName.endsWith(ext));
+                });
+
+                // Inverter a ordem para que as fotos mais recentes (subidas por último) apareçam primeiro
+                images.reverse();
+
+                images.forEach(image => {
+                    const item = document.createElement('div');
+                    item.className = 'masonry-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = image.download_url; // Link direto da imagem no GitHub
+                    img.alt = "Tabela TabeLaLa";
+                    img.loading = "lazy"; // Melhora a velocidade do site
+                    
+                    item.appendChild(img);
+                    gallery.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar a galeria:", error);
+            }
         }
+
+        // Inicia a função
+        fetchImages();
     </script>
 </body>
 </html>
+
 
 
 
